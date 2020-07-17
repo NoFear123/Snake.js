@@ -11,8 +11,8 @@ class Gameplay {
         this.y = canvas.height
         this.snakePosX = this.x / 2 - this.snakeSize;
         this.snakePosY = this.y / 2 - this.snakeSize;
-        this.snakeSpeedX = 2;
-        this.snakeSpeedY = 1;
+        this.snakeSpeedX = 5;
+        this.snakeSpeedY = 5;
     }
 
     drawGameBoard() {
@@ -35,41 +35,47 @@ class Gameplay {
         }
     }
 
-    snakeMoveRight(snakeSize) {
-            this.snakePosX += this.snakeSpeedX;
-            if(this.snakePosX === this.x - snakeSize){
-                console.log('Koniec');
-                clearInterval(setGame);         
+    moves(snakeSize) {
+        const dir = event.keyCode;
+        switch (dir) {
+            case 39: { //right
+                this.snakePosX += this.snakeSpeedX;
+                if (this.snakePosX === this.x - snakeSize) {
+                    console.log('Koniec');
+                    clearInterval(setGame);
+                }
             }
-    }
-
-    snakeMoveLeft() {
-        this.snakePosX -= this.snakeSpeedX;
-        if(this.snakePosX <= 0){
-            console.log('Koniec');
-            clearInterval(setGame);         
+            break;
+        case 38: { //UP
+            this.snakePosY -= this.snakeSpeedY;
+            if (this.snakePosY === 0) {
+                console.log('Koniec');
+                clearInterval(setGame);
+            }
+        }
+        break;
+        case 37: { //Left
+            this.snakePosX -= this.snakeSpeedX;
+            if (this.snakePosX <= 0) {
+                console.log('Koniec');
+                clearInterval(setGame);
+            }
+        }
+        break;
+        case 40: { //DOWN
+            this.snakePosY += this.snakeSpeedY;
+            if (this.snakePosY >= this.y - snakeSize) {
+                console.log('Koniec');
+                clearInterval(setGame);
+            }
+        }
         }
     }
 
-    snakeMoveUp() {
-        this.snakePosY -= this.snakeSpeedY;
-        if(this.snakePosY === 0){
-            console.log('Koniec');
-            clearInterval(setGame);         
-        }
-    }
-
-    snakeMoveDown(snakeSize) {
-        this.snakePosY += this.snakeSpeedY;
-        if(this.snakePosY >= this.y - snakeSize){
-            console.log('Koniec');
-            clearInterval(setGame);         
-        }
-    }
     game() {
         this.drawGameBoard();
         this.snakeInit(25);
-        this.snakeMoveRight(25);
+        // this.snakeMoveRight(25);
     }
 }
 const newGameBoard = new Gameplay(25);
@@ -78,11 +84,11 @@ function Paint() {
     newGameBoard.game();
 }
 
+function direction() {
+    newGameBoard.moves(25);
+}
 
-const setGame = setInterval(function(){
+const setGame = setInterval(function () {
     Paint();
-},1000/60);
-
-// const setPosition = setInterval(function(){
-//     document.addEventListener('keydown', Moves);
-// },1000/60)
+    document.addEventListener('keydown', direction);
+}, 1000 / 60);
