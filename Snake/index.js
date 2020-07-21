@@ -33,11 +33,23 @@ const dir = {
     dirDownY: -1
 }
 
+const pointAndLevels = {
+    point: 10,
+    level: 1,
+    sumPoint: 10,
+    sumLevel: 1
+}
+
 const elements = {
     board: document.querySelector('#gameBoard'),
     over: document.querySelector('.game-over-container'),
     score: document.querySelector('.score-board'),
-    btnOver: document.querySelector('.btn-game-over')
+    btnOver: document.querySelector('.btn-game-over'),
+    point: document.querySelector('.points span'),
+    level: document.querySelector('.level span'),
+    sumPoint: document.querySelector('.sum-point span'),
+    sumLevel: document.querySelector('.sum-level span'),
+    howDead: document.querySelector('.how-dead')
 }
 
 function game() {
@@ -62,13 +74,31 @@ function updateDir() {
     }
 }
 
+function getPointsAndLevels() {
+    elements.point.textContent = '';
+    elements.point.textContent += pointAndLevels.point;
+    elements.level.textContent = '';
+    elements.level.textContent += pointAndLevels.level;
+    pointAndLevels.level += 1;
+    pointAndLevels.point += 10;
+}
+
+function showResults(){
+    elements.sumPoint.textContent = '';
+    elements.sumPoint.textContent += pointAndLevels.sumPoint;
+    elements.sumLevel.textContent = '';
+    elements.sumLevel.textContent += pointAndLevels.sumLevel;
+    pointAndLevels.sumLevel += 1;
+    pointAndLevels.sumPoint += 10;
+}
+
 function Dead() {
     elements.board.classList.add('hide');
     elements.score.classList.add('hide');
     elements.over.classList.remove('hide');
 }
 
-function Again(){
+function Again() {
     elements.board.classList.remove('hide');
     elements.score.classList.remove('hide');
     elements.over.classList.add('hide');
@@ -79,25 +109,29 @@ function gameOver() {
         snakePos.x = tile.x - 2;
         clearInterval(set)
         Dead();
+        elements.howDead.textContent = 'Uderzyłeś w ścianie!';
     }
     if (snakePos.x == 0) {
         snakePos.x += 1;
         clearInterval(set)
         Dead();
+        elements.howDead.textContent = 'Uderzyłeś w ścianie!';
     }
     if (snakePos.y == tile.y - 1) {
         snakePos.y = tile.y - 2;
         clearInterval(set)
         Dead();
+        elements.howDead.textContent = 'Uderzyłeś w ścianie!';
     }
     if (snakePos.y == 0) {
         snakePos.y += 1;
         clearInterval(set)
         Dead();
+        elements.howDead.textContent = 'Uderzyłeś w ścianie!';
     }
-    
 }
 elements.btnOver.addEventListener('click', Again)
+
 function drawBoard() {
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canv.width, canv.height)
@@ -117,22 +151,25 @@ function drawSnakeAndFood() {
         if (snakePieces[i].x == snakePos.x && snakePieces[i].y == snakePos.y) {
             clearInterval(set)
             Dead();
+            elements.howDead.textContent = 'Pożarłeś się!';
         }
     }
-    
+
     snakePieces.push({
         x: snakePos.x,
         y: snakePos.y
     });
-    
+
     while (snakePieces.length > snake.tail) {
         snakePieces.shift();
     }
-    
+
     if (food.foodX == snakePos.x && food.foodY == snakePos.y) {
         snake.tail++;
+        getPointsAndLevels();
+        showResults();
         food.foodX = Math.floor(Math.random() * tile.x);
-        food.foodY = Math.floor(Math.random() * tile.y)
+        food.foodY = Math.floor(Math.random() * tile.y);
     }
     ctx.fillStyle = "red";
     ctx.fillRect(food.foodX * tile.x, food.foodY * tile.y, food.foodSize, food.foodSize);
@@ -155,6 +192,6 @@ function direction(event) {
         checkDir = "DOWN"
     }
 }
-const set = setInterval(function(){
+const set = setInterval(function () {
     game();
 }, 1000 / 15);
