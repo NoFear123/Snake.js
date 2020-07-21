@@ -188,4 +188,5 @@ function drawSnakeAndFood() {
 
 const set = setInterval(function () {
     game();
+    // gg
 }, 1000 / 15);
