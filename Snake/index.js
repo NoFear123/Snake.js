@@ -102,6 +102,7 @@ function Again() {
     elements.board.classList.remove('hide');
     elements.score.classList.remove('hide');
     elements.over.classList.add('hide');
+    location.reload();
 }
 
 function gameOver() {
